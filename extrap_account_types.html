@@ -159,6 +159,14 @@ rect.pool-ex:hover,rect.pool-th:hover,rect.pool-ex:focus,rect.pool-th:focus{opac
 只用精确值问题时是 −56.9bp，加上阈值问题后变成 −46.5bp。</li>
 </ol></div>
 <h2>不同类型账户的信念曲线</h2>
+<div class="card"><b>每类账户是怎么筛出来的</b>
+<p class="muted">先剔除曾经出现过负持仓的钱包 3,246 个，剩下 505,207 个钱包。
+盈亏、交易额按钱包在全部已结算市场上的全样本期合计；挂单占比、持仓跨度、换手比只看利率市场。
+一个钱包可能同时满足几类标准，表中的钱包数按各自标准单独计（可重叠）；挑候选时按表中顺序进行，已入选的钱包不再进入后面的类型。</p>
+<table class="tbl"><thead><tr><th>类型</th><th>标准</th><th>用到的数据</th><th>符合标准的钱包</th><th>其中样本期内有信念的</th><th>本页候选</th></tr></thead>
+<tbody><tr><td><b>机构</b></td><td>累计盈亏 ≥ 100,000 美元</td><td>全部已结算市场（八个板块，不只利率市场）、全样本期的累计结算盈亏（08_pnl_all.py）</td><td class="num">298</td><td class="num">175</td><td class="num">3</td></tr><tr><td><b>散户</b></td><td>累计交易额 ≤ 1,000 美元，且 |累计盈亏| ≤ 100 美元</td><td>同上；交易额 = 累计下注成本（买入数量 × 成交价）</td><td class="num">219,298</td><td class="num">88,590</td><td class="num">3</td></tr><tr><td><b>做市商</b></td><td>利率市场的成交腿里，作为挂单方（maker）的占比 > 80%，且成交腿 ≥ 200 条</td><td>#1 wallet_types.csv 的 behavior_type = 做市商机器人（06_build_report.py）</td><td class="num">950</td><td class="num">693</td><td class="num">3</td></tr><tr><td><b>长期持有</b></td><td>利率市场里首末成交间隔 ≥ 60 天，且换手比 ≤ 2.5（换手比 = 累计成交股数 / 最大持仓股数）；且不是做市商、也不是高频翻仓（翻仓 ≥ 10 次或换手比 ≥ 6）—— #1 按 做市商 → 高频翻仓 → 长期持有 的顺序判定</td><td>#1 wallet_types.csv 的 behavior_type = 长期持有</td><td class="num">43,035</td><td class="num">26,178</td><td class="num">3</td></tr><tr><td><b>大额亏损户</b></td><td>累计盈亏在全部钱包的后 1%（切点 −4,727 美元）</td><td>同机构行</td><td class="num">5,033</td><td class="num">2,486</td><td class="num">3</td></tr></tbody></table>
+<p class="muted">「样本期内有信念」= 2025-10-11 之后、已完结（已公布并结算）会议的公布日之前，至少有一个交易日算得出连续信念。
+每类候选 = 在这些钱包里，取连续信念有值的交易日最多的那次会议，按天数取前 3 个（19_account_types.py）。</p></div>
 <p class="sub">信念：他有成交的每一分钟，用这一分钟最后一笔成交之后的仓位算连续信念（与日频同一算法），两次成交之间保持不变；市场共识：每个档位每分钟最后一个有效盘口快照的中间价，只用所有档位都有报价的分钟；概率：同一套反解得到的各结果概率。</p>
 <p class="muted">每张图下方的缩略图上按住拖动，就能放大到那一段时间看分钟级的变化；「显示全部」回到全窗口。鼠标移到图上看那一分钟的数值。</p>
 <h3>机构</h3><div class="card"><b>机构 · 候选 1</b>
